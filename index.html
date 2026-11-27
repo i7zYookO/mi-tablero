@@ -325,6 +325,7 @@ dialog.viewer .vx{position:fixed;top:14px;right:14px;background:rgba(255,255,255
 .warnbox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:color-mix(in srgb,var(--warn) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--warn) 45%,var(--line));border-radius:var(--radius);padding:12px 14px}
 .warnbox .aico{width:34px;height:34px;border-radius:10px;background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--warn);display:grid;place-items:center;flex:none}
 .warnbox .wtxt{display:grid;gap:2px;flex:1 1 200px;min-width:0}.warnbox small{color:var(--muted);font-size:.8rem}
+.steps{margin:0;padding-left:20px;display:grid;gap:6px}
 </style>
 </head>
 <body>
@@ -680,8 +681,8 @@ function attEditor(initial){
   const stopRec=()=>{if(rec&&rec.state!=="inactive")rec.stop()};
   micBtn.addEventListener("click",async()=>{
     if(rec&&rec.state==="recording"){stopRec();return}
-    if(!navigator.mediaDevices||!window.MediaRecorder){toast("Este navegador no puede grabar audio");return}
-    let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){toast("Permite el micrófono para grabar");return}
+    if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){micHelp("unsupported");return}
+    let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){micHelp(e&&e.name||"error");return}
     const types=["audio/webm;codecs=opus","audio/mp4","audio/ogg;codecs=opus"],mt=types.find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t));
     try{rec=new MediaRecorder(stream,Object.assign({audioBitsPerSecond:24000},mt?{mimeType:mt}:{}))}catch(e){rec=new MediaRecorder(stream)}
     chunks=[];t0=Date.now();rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
@@ -705,6 +706,22 @@ function attEditor(initial){
   return{node:wrap,get:()=>{stopRec();return list.map(a=>({id:a.id,type:a.type,dur:a.dur||0,at:attTime(a)}))},busy:()=>!!(rec&&rec.state==="recording")};
 }
 
+/* ayuda cuando el micrófono no abre */
+async function micHelp(err){
+  let st="";try{st=(await navigator.permissions.query({name:"microphone"})).state}catch(e){}
+  const android=/Android/i.test(navigator.userAgent);
+  modal((d,close)=>{
+    const steps=err==="unsupported"?["Abre la app desde Chrome (no desde el navegador de Facebook, WhatsApp u otro).","Actualiza Chrome en la Play Store."]
+      :err==="NotFoundError"?["El teléfono no encontró un micrófono disponible. Cierra otras apps que lo estén usando (llamadas, grabadora) e intenta de nuevo."]
+      :android?["Abre Chrome, toca los 3 puntitos > Configuración > Configuración de sitios > Micrófono.","Revisa que el Micrófono esté activado y que i7zyooko.github.io no esté en Bloqueados. Si está, tócalo y elige Permitir.","Luego abre Ajustes del teléfono > Apps > Chrome > Permisos > Micrófono > Permitir solo con la app en uso.","Vuelve a Mi Tablero, ciérrala del todo y ábrela de nuevo."]
+      :["En la barra de dirección toca el candado o el ícono de ajustes del sitio y permite el Micrófono.","Recarga la página."];
+    d.append(el("div",{class:"mbody"},el("h3",{text:"Hay que permitir el micrófono"}),
+      el("p",{class:"note",text:"La app usa el permiso de micrófono de Chrome, por eso no sale en los permisos de la app de Android. "+(st==="denied"?"Ahora mismo está bloqueado para este sitio.":"El teléfono no dejó usarlo.")}),
+      el("ol",{class:"steps"},...steps.map(t=>el("li",{text:t}))),
+      el("p",{class:"note",text:"Detalle: "+err+(st?" · permiso "+st:"")}),
+      el("div",{class:"mfoot"},el("button",{class:"btn",type:"button",onclick:close},"Entendido"))));
+  });
+}
 /* mini paint */
 function openPaint(onSave){
   modal((d,close)=>{

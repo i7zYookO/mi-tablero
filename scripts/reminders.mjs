@@ -54,8 +54,13 @@ async function runUser(u) {
     if (tasks.length) parts.push(`${tasks.length} tarea${tasks.length > 1 ? "s" : ""} para hoy` + (late ? ` (${late} vencida${late > 1 ? "s" : ""})` : ""));
     add("morning", "Buenos días · " + DOWN[now.wd], parts.length ? parts.join(" · ") : "Día libre de pendientes. Elige tu siguiente paso.");
   }
-  if (due(prefs.evening || "20:45", now) && pendingH.length)
-    add("evening", "Te faltan " + pendingH.length + " hábito" + (pendingH.length > 1 ? "s" : ""), pendingH.map(h => h.name).join(", "));
+  if (due(prefs.evening || "20:45", now)) {
+    const jd = (await ref.collection("journal").doc(now.key).get()).exists;
+    const bits = [];
+    if (pendingH.length) bits.push(pendingH.map(h => h.name).join(", "));
+    if (!jd) bits.push("tu nota del diario");
+    if (bits.length) add("evening", pendingH.length ? "Te faltan " + pendingH.length + " hábito" + (pendingH.length > 1 ? "s" : "") : "Escribe tu diario", "Pendiente hoy: " + bits.join(" y ") + ".");
+  }
   if (!msgs.length) return;
 
   const dead = new Set(), upd = {};

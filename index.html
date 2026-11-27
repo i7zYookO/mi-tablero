@@ -283,7 +283,7 @@ nav.tabbar button.center[aria-current="true"] svg.i{background:#1f6f5c;color:#ff
 .atts.edit .rm svg.i{width:14px;height:14px}
 .atts.edit .aud{padding-right:30px}.atts.edit .aud .rm{top:6px}
 .attbar{display:flex;gap:8px;flex-wrap:wrap}
-.attbar .btn{flex:1 1 0;min-width:0}
+.attbar{display:grid;grid-template-columns:1fr 1fr}.attbar .btn{min-width:0}
 .attbar .btn.rec{background:var(--danger);color:#fff}
 .paintm .mbody{justify-items:center}
 canvas.paint{touch-action:none;border-radius:12px;border:1px solid var(--line);background:#fff;cursor:crosshair}
@@ -695,14 +695,15 @@ function attEditor(initial){
     stopT=setTimeout(stopRec,180000);
   });
   // foto
-  const photoBtn=el("button",{class:"btn ghost",type:"button"},ic("image"),el("span",{text:"Foto"}));
-  photoBtn.addEventListener("click",()=>{const inp=el("input",{type:"file",accept:"image/*",style:"display:none"});
+  const pickPhoto=cam=>{const inp=el("input",Object.assign({type:"file",accept:"image/*",style:"display:none"},cam?{capture:"environment"}:{}));
     inp.addEventListener("change",async()=>{const f=inp.files&&inp.files[0];inp.remove();if(!f)return;const b=await shrinkImage(f).catch(()=>null);
-      if(!b){toast("No se pudo usar esa foto");return}list.push(await mediaSave(b,"photo"));paint()});document.body.append(inp);inp.click()});
+      if(!b){toast("No se pudo usar esa foto");return}list.push(await mediaSave(b,"photo"));paint()});document.body.append(inp);inp.click()};
+  const camBtn=el("button",{class:"btn ghost",type:"button"},ic("camera"),el("span",{text:"Cámara"}));camBtn.addEventListener("click",()=>pickPhoto(true));
+  const photoBtn=el("button",{class:"btn ghost",type:"button"},ic("image"),el("span",{text:"Galería"}));photoBtn.addEventListener("click",()=>pickPhoto(false));
   // dibujo
   const drawBtn=el("button",{class:"btn ghost",type:"button"},ic("brush"),el("span",{text:"Dibujo"}));
   drawBtn.addEventListener("click",()=>openPaint(async b=>{list.push(await mediaSave(b,"draw"));paint()}));
-  wrap.append(el("div",{class:"attbar"},micBtn,photoBtn,drawBtn),items);paint();
+  wrap.append(el("div",{class:"attbar"},micBtn,camBtn,photoBtn,drawBtn),items);paint();
   return{node:wrap,get:()=>{stopRec();return list.map(a=>({id:a.id,type:a.type,dur:a.dur||0,at:attTime(a)}))},busy:()=>!!(rec&&rec.state==="recording")};
 }
 

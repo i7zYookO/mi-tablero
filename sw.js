@@ -2,7 +2,7 @@
    - Guarda la app en el teléfono para abrirla sin internet.
    - index.html: primero la red (así llegan los cambios solos), si no hay señal usa la copia.
    - Recibe las notificaciones (Firebase Cloud Messaging). */
-const V = "tablero-v5";
+const V = "tablero-v6";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "firebase-config.js",
   "vendor/firebase-app-compat.js", "vendor/firebase-auth-compat.js",
   "vendor/firebase-firestore-compat.js", "vendor/firebase-messaging-compat.js",

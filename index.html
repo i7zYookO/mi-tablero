@@ -314,6 +314,17 @@ dialog.viewer .vx{position:fixed;top:14px;right:14px;background:rgba(255,255,255
 .jtl li.off .node svg.i{width:18px;height:18px;stroke-width:3.2}
 .jtl .jbody{padding:3px 0 16px;display:grid;gap:4px;min-width:0;cursor:pointer}
 .jtl li.off .jbody{cursor:default}
+
+.scale{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.scale button{border:1px solid var(--line);background:var(--surface-2);color:var(--fg);font:600 .9rem var(--font-body);padding:9px 0;border-radius:9px;cursor:pointer;min-width:0}
+.scale button[aria-pressed="true"]{background:var(--sc);border-color:var(--sc);color:#fff}
+.score{display:inline-flex;align-items:baseline;gap:1px;font-size:.75rem;color:var(--muted);background:var(--surface-2);border-radius:999px;padding:2px 9px}
+.score b{color:var(--sc);font-size:.95rem}
+.jh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chip.good{background:var(--accent-soft);color:var(--accent)}
+.warnbox{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:color-mix(in srgb,var(--warn) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--warn) 45%,var(--line));border-radius:var(--radius);padding:12px 14px}
+.warnbox .aico{width:34px;height:34px;border-radius:10px;background:color-mix(in srgb,var(--warn) 22%,transparent);color:var(--warn);display:grid;place-items:center;flex:none}
+.warnbox .wtxt{display:grid;gap:2px;flex:1 1 200px;min-width:0}.warnbox small{color:var(--muted);font-size:.8rem}
 </style>
 </head>
 <body>
@@ -367,7 +378,7 @@ const P={
   cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   flame:'<path d="M12 21c-4 0-7-2.7-7-6.5 0-3 2-5 3.5-6.5.3 2 1.5 3 2.5 3.5C11 8 12 5 14.5 3c.5 3 4.5 5.5 4.5 10.5 0 4.2-3 7.5-7 7.5z"/>',
   plus:'<path d="M12 5v14M5 12h14"/>', list:'<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>', grid:'<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>', pencil:'<path d="M4 20h4L19 9l-4-4L4 16z"/>', arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
-  bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/>', sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>', moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>', download:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>', upload:'<path d="M12 20V9M7 14l5-5 5 5M5 4h14"/>', mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>', image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>', brush:'<path d="M14 4l6 6-8.5 8.5-6-6z"/><path d="M5.5 12.5C3 13 3 16 3 21c3.5 0 7-.5 8.5-2.5"/>', eraser:'<path d="M7 20h13M4.5 15.5l9-9a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L12 18H8z"/>', undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>', gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>', user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'
+  bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/>', sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>', moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>', download:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>', upload:'<path d="M12 20V9M7 14l5-5 5 5M5 4h14"/>', mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>', image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>', brush:'<path d="M14 4l6 6-8.5 8.5-6-6z"/><path d="M5.5 12.5C3 13 3 16 3 21c3.5 0 7-.5 8.5-2.5"/>', eraser:'<path d="M7 20h13M4.5 15.5l9-9a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L12 18H8z"/>', undo:'<path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>', gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>', alert:'<path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5h.01"/>', user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'
 };
 const PROJ_ICONS=["briefcase","palette","dumbbell","grad","tag","roller","book","code","heart","rocket","home","camera"];
 const PALETTE=["#5b5bd6","#d6409f","#2e9e6a","#c98a12","#e5602b","#2f7fd1","#7b61a8","#0f8c8c"];
@@ -375,7 +386,7 @@ function ic(name){const s=document.createElementNS("http://www.w3.org/2000/svg",
 
 /* ---------- storage ---------- */
 const COLLS=["projects","items","habits","steps","journal"];
-const LS={state:"tablero.state.v2",out:"tablero.outbox.v1",ui:"tablero.ui.v2",old:"tablero.state.v1",who:"tablero.who",tok:"tablero.token",lastBk:"tablero.lastBackup",mq:"tablero.mediaQueue"};
+const LS={state:"tablero.state.v2",out:"tablero.outbox.v1",ui:"tablero.ui.v2",old:"tablero.state.v1",who:"tablero.who",tok:"tablero.token",lastBk:"tablero.lastBackup",mq:"tablero.mediaQueue",purge:"tablero.lastPurge"};
 function lsGet(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 let state=lsGet(LS.state,null)||Object.assign({projects:{},items:{}},lsGet(LS.old,{}));
@@ -584,6 +595,9 @@ function renderSettings(main){
   const lb=lsGet(LS.lastBk,0);
   sec.append(card("download","Respaldo en archivo",lb?"Último: "+ago(lb):"Todo se guarda solo en la nube y en este aparato. Esto te baja una copia extra.",
     el("button",{class:"btn ghost",type:"button",onclick:downloadBackup},"Descargar")));
+  const nA=allAtts().length;
+  sec.append(card("image","Tus archivos",nA?nA+" entre voz, fotos y dibujos. Se borran solos a los 3 meses; antes te aviso en Inicio.":"Voz, fotos y dibujos se borran solos a los 3 meses; antes te aviso en Inicio.",
+    nA?el("button",{class:"btn ghost",type:"button",onclick:()=>downloadMedia(allAtts().sort((a,b)=>a.at-b.at),"archivos")},"Descargar"):null));
   sec.append(card("upload","Importar respaldo","Trae tus datos desde un archivo de respaldo (.json o .md).",
     el("button",{class:"btn ghost",type:"button",onclick:importFile},"Elegir archivo")));
   // cuenta
@@ -613,7 +627,7 @@ async function flushMedia(){const q=mediaQueue();if(!q.length||!db)return;const 
 async function mediaSave(blob,type,dur){
   const id="m-"+uid();await idbPut(id,{blob,type,dur:dur||0});
   if(!(db&&await mediaUpload(id))){const q=mediaQueue();q.push(id);lsSet(LS.mq,q)}
-  return{id,type,dur:dur||0};
+  return{id,type,dur:dur||0,at:Date.now()};
 }
 const urlCache={};
 async function mediaUrl(id){
@@ -688,7 +702,7 @@ function attEditor(initial){
   const drawBtn=el("button",{class:"btn ghost",type:"button"},ic("brush"),el("span",{text:"Dibujo"}));
   drawBtn.addEventListener("click",()=>openPaint(async b=>{list.push(await mediaSave(b,"draw"));paint()}));
   wrap.append(el("div",{class:"attbar"},micBtn,photoBtn,drawBtn),items);paint();
-  return{node:wrap,get:()=>{stopRec();return list.map(a=>({id:a.id,type:a.type,dur:a.dur||0}))},busy:()=>!!(rec&&rec.state==="recording")};
+  return{node:wrap,get:()=>{stopRec();return list.map(a=>({id:a.id,type:a.type,dur:a.dur||0,at:attTime(a)}))},busy:()=>!!(rec&&rec.state==="recording")};
 }
 
 /* mini paint */
@@ -745,14 +759,16 @@ function openJournalModal(){
   modal((d,close)=>{
     const ta=el("textarea",{rows:"7",placeholder:"¿Cómo te fue hoy? Qué hiciste, qué aprendiste, cómo te sentiste…",maxlength:"10000"});
     let clearDraft=()=>{};if(cur)ta.value=cur.text||"";else clearDraft=draft(ta,"journal."+k);
-    const ae=attEditor(cur&&cur.att);
+    const ae=attEditor(cur&&cur.att);let score=cur&&cur.score||null;
     const save=()=>{if(ae.busy()){toast("Primero detén la grabación");return}
       if(key(today())!==k){close();toast("Ya cambió el día. Solo se puede escribir la nota de hoy.");return}
-      const text=ta.value.trim(),att=ae.get();if(!text&&!att.length){ta.focus();return}
-      put("journal",Object.assign({},cur||{id:k,createdAt:Date.now()},{text,att,updatedAt:Date.now()}));clearDraft();close();forceRender();toast("Nota del día guardada")};
+      const text=ta.value.trim(),att=ae.get();if(!text&&!att.length&&!score){ta.focus();return}
+      put("journal",Object.assign({},cur||{id:k,createdAt:Date.now()},{text,att,score:score||null,updatedAt:Date.now()}));clearDraft();close();forceRender();toast("Nota del día guardada")};
     const t=today();
     d.append(el("div",{class:"mbody"},el("h3",{text:"Diario · "+DOWL[t.getDay()]+" "+t.getDate()+" de "+MESL[t.getMonth()]}),
-      el("p",{class:"note",text:"Solo puedes escribir la nota de hoy. Mañana queda guardada en tu hilo."}),ta,ae.node,
+      el("p",{class:"note",text:"Solo puedes escribir la nota de hoy. Mañana queda guardada en tu hilo."}),
+      el("span",{class:"lbl",text:"¿Qué tal estuvo el día?"}),scorePick(score,v=>score=v),ta,ae.node,
+      habitsFor(t).length?el("span",{class:"lbl",text:"Hábitos de hoy · palomea los que te faltaron"}):null,habitChecks(t),
       el("div",{class:"mfoot"},el("button",{class:"btn ghost",type:"button",onclick:close},"Cancelar"),el("button",{class:"btn",type:"button",onclick:save},"Guardar nota"))));
   });
 }
@@ -760,18 +776,20 @@ function journalStats(){
   const t=today(),ks=Object.keys(state.journal).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
   let s=0,d=t;if(!state.journal[key(d)])d=addDays(d,-1);while(state.journal[key(d)]){s++;d=addDays(d,-1)}
   const m0=new Date(t.getFullYear(),t.getMonth(),1);let mn=0;for(let x=m0;x<=t;x=addDays(x,1))if(state.journal[key(x)])mn++;
-  return{streak:s,month:mn,monthDays:t.getDate(),first:ks[0]||null,total:ks.length};
+  const sc=[];for(let x=m0;x<=t;x=addDays(x,1)){const e=state.journal[key(x)];if(e&&e.score)sc.push(e.score)}
+  return{streak:s,month:mn,monthDays:t.getDate(),first:ks[0]||null,total:ks.length,avg:sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length*10)/10:null};
 }
 function renderJournal(main){
   const t=today(),tk=key(t),cur=state.journal[tk],st=journalStats();
   main.append(el("div",{class:"hello"},el("h2",{text:DOWL[t.getDay()]+" "+t.getDate()+" de "+MESL[t.getMonth()]}),
-    el("span",{class:"note",text:st.total?"Racha "+st.streak+" día"+(st.streak===1?"":"s")+" · este mes "+st.month+" de "+st.monthDays:"Escribe una nota cada día. Solo se puede la de hoy."})));
-  if(cur){main.append(el("section",{class:"panel jtoday"},el("div",{class:"sec-h"},el("span",{class:"lbl",text:"Nota de hoy"}),
+    el("span",{class:"note",text:st.total?"Racha "+st.streak+" día"+(st.streak===1?"":"s")+" · este mes "+st.month+" de "+st.monthDays+(st.avg?" · promedio "+st.avg+"/10":""):"Escribe una nota cada día. Solo se puede la de hoy."})));
+  if(cur){main.append(el("section",{class:"panel jtoday"},el("div",{class:"sec-h"},el("span",{class:"jh"},el("span",{class:"lbl",text:"Nota de hoy"}),scoreBadge(cur.score)),
       el("button",{class:"ibtn",type:"button",onclick:openJournalModal},ic("pencil"),"Editar")),
     cur.text?el("p",{class:"jtext",text:cur.text}):null,attView(cur.att,true)))}
   else main.append(el("button",{class:"current jcta",type:"button",onclick:openJournalModal},
     el("span",{class:"ttl"},ic("book"),el("span",{class:"lbl",text:"Diario"})),el("span",{class:"big",text:"Escribir la nota de hoy"})));
 
+  const hc=habitChecks(t);if(hc)main.append(el("section",{class:"sec"},el("div",{class:"sec-h"},el("h2",{text:"Hábitos de hoy"}),habitSummary(t)),hc));
   // hilo: de ayer hacia atrás hasta la primera nota
   const startK=st.first&&st.first<tk?st.first:null;
   const sec=el("section",{class:"sec"},el("div",{class:"sec-h"},el("h2",{text:"Tu hilo"}),el("span",{class:"lbl",text:st.total+" nota"+(st.total===1?"":"s")})));
@@ -785,7 +803,7 @@ function renderJournal(main){
     const n=diffDays(t,d),lbl=n===1?"Ayer":DOW[d.getDay()]+" "+d.getDate()+" "+MES[d.getMonth()]+(d.getFullYear()!==t.getFullYear()?" "+d.getFullYear():"");
     const li=el("li",{class:e?"on":"off",style:"--c:"+col(k)+";--cu:"+up+";--cd:"+dn+(i===0?";--first:1":"")},
       el("span",{class:"rail"},el("span",{class:"node"},ic(e?"check":"x"))),
-      el("div",{class:"jbody"},el("span",{class:"lbl",text:lbl}),
+      el("div",{class:"jbody"},el("span",{class:"jh"},el("span",{class:"lbl",text:lbl}),e?scoreBadge(e.score):null,habitSummary(d)),
         e?(e.text?el("p",{class:"jtext clamp",text:e.text}):null):el("span",{class:"note",text:"Sin nota"}),
         e?attView(e.att):null));
     if(e)li.querySelector(".jbody").addEventListener("click",ev=>{if(ev.target.closest("audio,.thumb"))return;const p=li.querySelector(".jtext");if(p)p.classList.toggle("clamp")});
@@ -793,6 +811,90 @@ function renderJournal(main){
   sec.append(tl);
   if(days.length>LIM)sec.append(el("div",null,el("button",{class:"btn ghost",type:"button",onclick:()=>{ui.jrAll=true;saveUi();forceRender()}},"Ver los "+(days.length-LIM)+" días anteriores")));
   main.append(sec);
+}
+
+/* ---------- calificación del día ---------- */
+const scoreColor=n=>"hsl("+Math.round((Math.max(1,Math.min(10,n))-1)/9*130)+" 62% 42%)";
+function scoreBadge(n){if(!(n>=1&&n<=10))return null;return el("span",{class:"score",style:"--sc:"+scoreColor(n),title:"Cómo estuvo el día"},el("b",{text:String(n)}),"/10")}
+function scorePick(cur,onPick){
+  const w=el("div",{class:"scale",role:"group","aria-label":"Cómo estuvo el día, del 1 al 10"});
+  for(let n=1;n<=10;n++){const b=el("button",{type:"button",style:"--sc:"+scoreColor(n),"aria-pressed":String(n===cur),text:String(n)});
+    b.addEventListener("click",()=>{const on=b.getAttribute("aria-pressed")!=="true";w.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",String(on&&x===b)));onPick(on?n:null)});w.append(b)}
+  return w;
+}
+/* hábitos que tocan un día */
+const habitsFor=d=>habitList().filter(h=>sched(h,d)&&startOf(h)<=d);
+function habitChecks(d){
+  const k=key(d),hs=habitsFor(d);if(!hs.length)return null;
+  const box=el("div",{class:"qh"});
+  for(const x of hs){const b=el("button",{class:"qhb",type:"button","aria-pressed":String(has(x,k))},el("span",{class:"qc"},ic("check")),el("span",{text:x.name}));
+    b.addEventListener("click",()=>{const h=state.habits[x.id];if(!h)return;toggleDay(h,k);b.setAttribute("aria-pressed",String(has(state.habits[x.id],k)))});box.append(b)}
+  return box;
+}
+function habitSummary(d){const k=key(d),hs=habitsFor(d);if(!hs.length)return null;const n=hs.filter(h=>has(h,k)).length;
+  return el("span",{class:"chip"+(n===hs.length?" good":""),text:"Hábitos "+n+"/"+hs.length})}
+
+/* ---------- archivos: se borran a los 3 meses ---------- */
+const KEEP_DAYS=90,WARN_DAYS=7;
+function attTime(a){if(a.at)return a.at;const m=/^m-([0-9a-z]+)$/.exec(a.id||"");if(m&&m[1].length>5){const t=parseInt(m[1].slice(0,-5),36);if(t>1.6e12&&t<4e12)return t}return Date.now()}
+function allAtts(){const out=[];
+  for(const it of Object.values(state.items))for(const a of (it.att||[]))out.push({coll:"items",doc:it,a,at:attTime(a)});
+  for(const j of Object.values(state.journal))for(const a of (j.att||[]))out.push({coll:"journal",doc:j,a,at:attTime(a)});
+  return out}
+const delAt=x=>x.at+KEEP_DAYS*864e5;
+function expiringSoon(){const lim=Date.now()+WARN_DAYS*864e5;return allAtts().filter(x=>delAt(x)<=lim).sort((p,q)=>p.at-q.at)}
+async function mediaDelete(id){try{const d=await idb();d.transaction("m","readwrite").objectStore("m").delete(id)}catch(e){}if(db)db.doc("media/"+id).delete().catch(()=>{});delete urlCache[id]}
+function purgeOld(){
+  if(HAS_FB&&(!user||!gotServer))return;
+  const today_=key(today());if(lsGet(LS.purge,"")===today_)return;lsSet(LS.purge,today_);
+  const now=Date.now(),old=allAtts().filter(x=>delAt(x)<=now);
+  if(old.length){const byDoc={};for(const x of old){const k=x.coll+"/"+x.doc.id;(byDoc[k]=byDoc[k]||{x,ids:new Set()}).ids.add(x.a.id)}
+    for(const {x,ids} of Object.values(byDoc)){const cur=state[x.coll][x.doc.id];if(!cur)continue;put(x.coll,Object.assign({},cur,{att:(cur.att||[]).filter(a=>!ids.has(a.id))}))}
+    old.forEach(x=>mediaDelete(x.a.id));toast(old.length+" archivo"+(old.length>1?"s":"")+" de hace más de 3 meses se borraron");setTimeout(render,0)}
+}
+
+/* ---------- ZIP sencillo (sin compresión) para descargar archivos ---------- */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+async function makeZip(files){
+  const enc=new TextEncoder(),parts=[],central=[];let off=0;
+  for(const f of files){const data=new Uint8Array(await f.blob.arrayBuffer()),name=enc.encode(f.name),crc=crc32(data),d=new Date(f.at||Date.now());
+    const dt=((d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1))&0xFFFF,dd=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate())&0xFFFF;
+    const h=new DataView(new ArrayBuffer(30));[[0,0x04034b50,4],[4,20,2],[6,0x0800,2],[8,0,2],[10,dt,2],[12,dd,2],[14,crc,4],[18,data.length,4],[22,data.length,4],[26,name.length,2],[28,0,2]].forEach(([o,v,s])=>s===4?h.setUint32(o,v,true):h.setUint16(o,v,true));
+    parts.push(h.buffer,name,data);
+    const c=new DataView(new ArrayBuffer(46));[[0,0x02014b50,4],[4,20,2],[6,20,2],[8,0x0800,2],[10,0,2],[12,dt,2],[14,dd,2],[16,crc,4],[20,data.length,4],[24,data.length,4],[28,name.length,2],[30,0,2],[32,0,2],[34,0,2],[36,0,2],[38,0,4],[42,off,4]].forEach(([o,v,s])=>s===4?c.setUint32(o,v,true):c.setUint16(o,v,true));
+    central.push(c.buffer,name);off+=30+name.length+data.length}
+  const csize=central.reduce((s,p)=>s+(p.byteLength||p.length),0),e=new DataView(new ArrayBuffer(22));
+  [[0,0x06054b50,4],[4,0,2],[6,0,2],[8,files.length,2],[10,files.length,2],[12,csize,4],[16,off,4],[20,0,2]].forEach(([o,v,s])=>s===4?e.setUint32(o,v,true):e.setUint16(o,v,true));
+  return new Blob([...parts,...central,e.buffer],{type:"application/zip"});
+}
+async function mediaBlob(id){let r=await idbGet(id);if(r)return r.blob;if(!db)return null;
+  try{const s=await db.doc("media/"+id).get();const d=s.exists?s.data():null;if(d&&d.data){const b=await urlToBlob(d.data);idbPut(id,{blob:b,type:d.type,dur:d.dur});return b}}catch(e){}return null}
+const extOf=m=>/jpeg/.test(m)?"jpg":/png/.test(m)?"png":/webm/.test(m)?"webm":/mp4|m4a|aac/.test(m)?"m4a":/ogg/.test(m)?"ogg":"bin";
+const TYPE_ES={audio:"voz",photo:"foto",draw:"dibujo"};
+async function downloadMedia(list,label){
+  if(!list.length){toast("No hay archivos para descargar");return}
+  toast("Preparando "+list.length+" archivo"+(list.length>1?"s":"")+"…");
+  const files=[],used={};let miss=0;
+  for(const x of list){const b=await mediaBlob(x.a.id);if(!b){miss++;continue}
+    const d=new Date(x.at),base=key(d)+"_"+(x.coll==="journal"?"diario":"idea")+"_"+(TYPE_ES[x.a.type]||"archivo");used[base]=(used[base]||0)+1;
+    files.push({name:base+"_"+used[base]+"."+extOf(b.type),blob:b,at:x.at})}
+  // también el texto de cada nota o idea, para que el archivo tenga contexto
+  const seen=new Set();let txt="";for(const x of list){const k=x.coll+"/"+x.doc.id;if(seen.has(k))continue;seen.add(k);
+    txt+=(x.coll==="journal"?"Diario "+x.doc.id+(x.doc.score?" ("+x.doc.score+"/10)":""):"Idea del "+key(new Date(x.doc.createdAt||x.at)))+"\n"+(x.doc.text||"")+"\n\n"}
+  files.push({name:"textos.txt",blob:new Blob([txt],{type:"text/plain"}),at:Date.now()});
+  if(files.length<=1){toast("No se pudieron leer los archivos. Conéctate a internet e intenta otra vez.");return}
+  const z=await makeZip(files),url=URL.createObjectURL(z),a=el("a",{href:url,download:"mi-tablero-"+label+"-"+key(today())+".zip"});
+  document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+  toast("Descargado"+(miss?" ("+miss+" no se encontraron)":""));
+}
+function expiryBanner(){
+  const xs=expiringSoon();if(!xs.length)return null;
+  const first=delAt(xs[0]),n=Math.max(0,Math.ceil((first-Date.now())/864e5)),d=new Date(first);
+  return el("section",{class:"warnbox"},el("span",{class:"aico"},ic("alert")),
+    el("div",{class:"wtxt"},el("b",{text:xs.length+" archivo"+(xs.length>1?"s":"")+" se borra"+(xs.length>1?"n":"")+(n<=1?" mañana":" en "+n+" días")}),
+      el("small",{text:"Voz, fotos y dibujos de hace casi 3 meses. A partir del "+d.getDate()+" de "+MESL[d.getMonth()]+" se borran para liberar espacio. Descárgalos si los quieres guardar."})),
+    el("button",{class:"btn",type:"button",onclick:()=>downloadMedia(xs,"por-borrar")},ic("download"),"Descargar"));
 }
 
 /* ---------- AJUSTES en su ventana ---------- */
@@ -816,7 +918,7 @@ function forceRender(){const a=document.activeElement;if(a&&a.blur&&a.closest&&a
 function render(){if(editing()){renderPending=true;return}doRender()}
 document.addEventListener("focusout",()=>setTimeout(()=>{if(renderPending&&!editing())doRender()},60));
 function doRender(){
-  renderPending=false;
+  renderPending=false;try{purgeOld()}catch(e){console.warn(e)}
   const main=$("main"),y=window.scrollY;main.replaceChildren();
   let tab=ui.view.startsWith("p:")?"home":ui.view;
   const back=$("backBtn");back.hidden=true;
@@ -957,9 +1059,11 @@ function renderDash(main){
   const ideas=Object.values(state.items).filter(i=>i.kind==="idea").sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
   const wkSteps=Object.values(state.steps).filter(s=>(s.at||0)>=monday(t).getTime()).length;
 
+  const eb=expiryBanner();
   main.append(el("div",{class:"hello"},el("h2",{text:h<12?"Buenos días":h<19?"Buenas tardes":"Buenas noches"}),
     el("span",{class:"note",text:DOW[t.getDay()]+" "+t.getDate()+" de "+MESL[t.getMonth()]})));
 
+  if(eb)main.append(eb);
   /* focus: most recent project with a current step */
   const focus=list.filter(p=>p.next).sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0))[0];
   if(focus)main.append(el("button",{class:"current focus",type:"button",style:"--pc:"+color(focus),onclick:()=>go("p:"+focus.id)},
